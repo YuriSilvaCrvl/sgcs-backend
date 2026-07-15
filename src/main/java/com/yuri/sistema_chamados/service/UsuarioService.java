@@ -4,6 +4,7 @@ import com.yuri.sistema_chamados.model.Usuario;
 import com.yuri.sistema_chamados.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 

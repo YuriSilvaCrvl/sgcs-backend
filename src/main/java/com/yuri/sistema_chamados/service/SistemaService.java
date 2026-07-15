@@ -20,6 +20,10 @@ public class SistemaService {
         return sistemaRepository.findAll();
     }
 
+    public List<Sistema> listarPorEmpresa(Integer idEmpresa) {
+        return sistemaRepository.findByEmpresaId(idEmpresa);
+    }
+
     public Optional<Sistema> buscarPorId(Integer id) {
         return sistemaRepository.findById(id);
     }
