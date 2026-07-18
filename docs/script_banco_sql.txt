@@ -2,7 +2,7 @@
 -- SISTEMA DE CHAMADOS
 -- Script de criação do banco de dados
 -- Banco: PostgreSQL
--- Versão: 0.2
+-- Versão: 0.3
 -- =============================================
 
 DROP TABLE IF EXISTS anexo CASCADE;
@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS empresa CASCADE;
 -- EMPRESA
 -- =============================================
 CREATE TABLE empresa (
-    id_empresa  SERIAL          PRIMARY KEY,
+    id          SERIAL          PRIMARY KEY,
     nome        VARCHAR(100)    NOT NULL,
     cnpj        VARCHAR(14)     NOT NULL UNIQUE,
     telefone    VARCHAR(20),
@@ -29,20 +29,20 @@ CREATE TABLE empresa (
 -- USUARIO
 -- =============================================
 CREATE TABLE usuario (
-    id_usuario   SERIAL          PRIMARY KEY,
-    id_empresa   INTEGER         NOT NULL REFERENCES empresa(id_empresa),
-    nome         VARCHAR(100)    NOT NULL,
-    email        VARCHAR(100)    NOT NULL UNIQUE,
-    senha        VARCHAR(255)    NOT NULL,
-    tipo_usuario VARCHAR(10)     NOT NULL CHECK (tipo_usuario IN ('CLIENTE', 'DEV', 'ADMIN'))
+    id              SERIAL          PRIMARY KEY,
+    id_empresa      INTEGER         NOT NULL REFERENCES empresa(id),
+    nome            VARCHAR(100)    NOT NULL,
+    email           VARCHAR(100)    NOT NULL UNIQUE,
+    senha           VARCHAR(255)    NOT NULL,
+    tipo_usuario    VARCHAR(10)     NOT NULL CHECK (tipo_usuario IN ('CLIENTE', 'DEV', 'ADMIN'))
 );
 
 -- =============================================
 -- SISTEMA
 -- =============================================
 CREATE TABLE sistema (
-    id_sistema  SERIAL          PRIMARY KEY,
-    id_empresa  INTEGER         NOT NULL REFERENCES empresa(id_empresa),
+    id          SERIAL          PRIMARY KEY,
+    id_empresa  INTEGER         NOT NULL REFERENCES empresa(id),
     nome        VARCHAR(100)    NOT NULL,
     descricao   TEXT,
     versao      VARCHAR(20)
@@ -52,19 +52,19 @@ CREATE TABLE sistema (
 -- CATEGORIA
 -- =============================================
 CREATE TABLE categoria (
-    id_categoria    SERIAL          PRIMARY KEY,
-    nome            VARCHAR(50)     NOT NULL,
-    descricao       TEXT
+    id          SERIAL          PRIMARY KEY,
+    nome        VARCHAR(50)     NOT NULL,
+    descricao   TEXT
 );
 
 -- =============================================
 -- CHAMADO
 -- =============================================
 CREATE TABLE chamado (
-    id_chamado      SERIAL          PRIMARY KEY,
-    id_usuario      INTEGER         NOT NULL REFERENCES usuario(id_usuario),
-    id_sistema      INTEGER         NOT NULL REFERENCES sistema(id_sistema),
-    id_categoria    INTEGER         NOT NULL REFERENCES categoria(id_categoria),
+    id              SERIAL          PRIMARY KEY,
+    id_usuario      INTEGER         NOT NULL REFERENCES usuario(id),
+    id_sistema      INTEGER         NOT NULL REFERENCES sistema(id),
+    id_categoria    INTEGER         NOT NULL REFERENCES categoria(id),
     titulo          VARCHAR(150)    NOT NULL,
     descricao       TEXT            NOT NULL,
     status          VARCHAR(30)     NOT NULL DEFAULT 'ABERTO'
@@ -77,31 +77,31 @@ CREATE TABLE chamado (
 -- COMENTARIO
 -- =============================================
 CREATE TABLE comentario (
-    id_comentario   SERIAL      PRIMARY KEY,
-    id_chamado      INTEGER     NOT NULL REFERENCES chamado(id_chamado),
-    id_usuario      INTEGER     NOT NULL REFERENCES usuario(id_usuario),
-    texto           TEXT        NOT NULL,
-    data_hora       TIMESTAMP   NOT NULL DEFAULT NOW()
+    id          SERIAL      PRIMARY KEY,
+    id_chamado  INTEGER     NOT NULL REFERENCES chamado(id),
+    id_usuario  INTEGER     NOT NULL REFERENCES usuario(id),
+    texto       TEXT        NOT NULL,
+    data_hora   TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
 -- =============================================
 -- ATRIBUICAO
 -- =============================================
 CREATE TABLE atribuicao (
-    id_atribuicao       SERIAL      PRIMARY KEY,
-    id_chamado          INTEGER     NOT NULL REFERENCES chamado(id_chamado),
-    id_usuario          INTEGER     NOT NULL REFERENCES usuario(id_usuario),
-    data_atribuicao     TIMESTAMP   NOT NULL DEFAULT NOW(),
-    ativo               BOOLEAN     NOT NULL DEFAULT TRUE
+    id              SERIAL      PRIMARY KEY,
+    id_chamado      INTEGER     NOT NULL REFERENCES chamado(id),
+    id_usuario      INTEGER     NOT NULL REFERENCES usuario(id),
+    data_atribuicao TIMESTAMP   NOT NULL DEFAULT NOW(),
+    ativo           BOOLEAN     NOT NULL DEFAULT TRUE
 );
 
 -- =============================================
 -- ANEXO
 -- =============================================
 CREATE TABLE anexo (
-    id_anexo        SERIAL          PRIMARY KEY,
-    id_chamado      INTEGER         NOT NULL REFERENCES chamado(id_chamado),
-    id_usuario      INTEGER         NOT NULL REFERENCES usuario(id_usuario),
+    id              SERIAL          PRIMARY KEY,
+    id_chamado      INTEGER         NOT NULL REFERENCES chamado(id),
+    id_usuario      INTEGER         NOT NULL REFERENCES usuario(id),
     nome_arquivo    VARCHAR(255)    NOT NULL,
     caminho         VARCHAR(500)    NOT NULL,
     tipo            VARCHAR(50),
