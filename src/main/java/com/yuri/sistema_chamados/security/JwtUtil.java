@@ -16,9 +16,10 @@ public class JwtUtil {
     );
     private final long expirationMs = 86400000;
 
-    public String gerarToken(String email) {
+    public String gerarToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(secretKey)
@@ -27,6 +28,10 @@ public class JwtUtil {
 
     public String extrairEmail(String token) {
         return getClaims(token).getSubject();
+    }
+
+    public String extrairRole(String token) {
+        return getClaims(token).get("role", String.class);
     }
 
     public boolean validarToken(String token) {

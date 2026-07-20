@@ -36,7 +36,10 @@ public class AuthController {
             return ResponseEntity.status(401).body("Senha incorreta");
         }
 
-        String token = jwtUtil.gerarToken(usuario.get().getEmail());
+        String token = jwtUtil.gerarToken(
+                usuario.get().getEmail(),
+                usuario.get().getTipoUsuario().name()
+        );
         return ResponseEntity.ok(token);
     }
 }
