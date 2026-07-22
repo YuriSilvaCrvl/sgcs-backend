@@ -15,11 +15,11 @@ public class Comentario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "id_chamado", nullable = false)
     private Chamado chamado;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
@@ -28,5 +28,10 @@ public class Comentario {
 
     @Column(nullable = false)
     private LocalDateTime dataHora;
+
+    @PrePersist
+    public void prePersist() {
+        this.dataHora = LocalDateTime.now();
+    }
 
 }

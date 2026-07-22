@@ -1,5 +1,6 @@
 package com.yuri.sistema_chamados.controller;
 
+import com.yuri.sistema_chamados.dto.UsuarioRequestDTO;
 import com.yuri.sistema_chamados.model.Usuario;
 import com.yuri.sistema_chamados.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public Usuario cadastrar(@RequestBody Usuario usuario) {
-        return usuarioService.cadastrar(usuario);
+    public Usuario cadastrar(@RequestBody UsuarioRequestDTO dto) {
+        return usuarioService.cadastrar(dto);
     }
 
     @PutMapping("/{id}")

@@ -14,11 +14,11 @@ public class Anexo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_chamado", nullable = false)
 	private Chamado chamado;
 
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 	
@@ -33,5 +33,10 @@ public class Anexo {
 	
 	@Column(nullable = false)
 	private LocalDateTime dataUpload;
+
+	@PrePersist
+	public void prePersist() {
+		this.dataUpload = LocalDateTime.now();
+	}
 	
 }

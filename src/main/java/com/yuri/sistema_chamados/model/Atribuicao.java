@@ -7,18 +7,17 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "atribuicao")
-
 public class Atribuicao {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_chamado", nullable = false)
 	private Chamado chamado;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 
@@ -27,4 +26,12 @@ public class Atribuicao {
 
 	@Column(nullable = false)
 	private boolean ativo;
+
+	@PrePersist
+	public void prePersist() {
+		this.dataAtribuicao = LocalDateTime.now();
+		if (!this.ativo) {
+			this.ativo = true;
+		}
+	}
 }

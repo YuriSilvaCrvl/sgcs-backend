@@ -1,10 +1,13 @@
 package com.yuri.sistema_chamados.service;
 
+import com.yuri.sistema_chamados.dto.UsuarioRequestDTO;
+import com.yuri.sistema_chamados.model.Empresa;
 import com.yuri.sistema_chamados.model.Usuario;
+import com.yuri.sistema_chamados.repository.EmpresaRepository;
 import com.yuri.sistema_chamados.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +19,22 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private EmpresaRepository empresaRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Usuario cadastrar(Usuario usuario) {
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+    public Usuario cadastrar(UsuarioRequestDTO dto) {
+        Empresa empresa = empresaRepository.findById(dto.getIdEmpresa())
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+        usuario.setTipoUsuario(dto.getTipoUsuario());
+        usuario.setEmpresa(empresa);
+
         return usuarioRepository.save(usuario);
     }
 
