@@ -1,5 +1,6 @@
 package com.yuri.sistema_chamados.controller;
 
+import com.yuri.sistema_chamados.dto.SistemaResponseDTO;
 import com.yuri.sistema_chamados.model.Sistema;
 import com.yuri.sistema_chamados.service.SistemaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,29 +17,29 @@ public class SistemaController {
     private SistemaService sistemaService;
 
     @GetMapping
-    public List<Sistema> listar() {
+    public List<SistemaResponseDTO> listar() {
         return sistemaService.listar();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sistema> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<SistemaResponseDTO> buscarPorId(@PathVariable Integer id) {
         return sistemaService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/empresa/{idEmpresa}")
-    public List<Sistema> listarPorEmpresa(@PathVariable Integer idEmpresa) {
+    public List<SistemaResponseDTO> listarPorEmpresa(@PathVariable Integer idEmpresa) {
         return sistemaService.listarPorEmpresa(idEmpresa);
     }
 
     @PostMapping
-    public Sistema cadastrar(@RequestBody Sistema sistema) {
+    public SistemaResponseDTO cadastrar(@RequestBody Sistema sistema) {
         return sistemaService.cadastrar(sistema);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Sistema> editar(@PathVariable Integer id, @RequestBody Sistema sistema) {
+    public ResponseEntity<SistemaResponseDTO> editar(@PathVariable Integer id, @RequestBody Sistema sistema) {
         try {
             return ResponseEntity.ok(sistemaService.editar(id, sistema));
         } catch (RuntimeException e) {

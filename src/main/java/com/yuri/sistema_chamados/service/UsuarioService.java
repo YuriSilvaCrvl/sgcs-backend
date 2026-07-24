@@ -1,6 +1,7 @@
 package com.yuri.sistema_chamados.service;
 
 import com.yuri.sistema_chamados.dto.UsuarioRequestDTO;
+import com.yuri.sistema_chamados.dto.UsuarioResponseDTO;
 import com.yuri.sistema_chamados.model.Empresa;
 import com.yuri.sistema_chamados.model.Usuario;
 import com.yuri.sistema_chamados.repository.EmpresaRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -24,7 +26,18 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Usuario cadastrar(UsuarioRequestDTO dto) {
+    private UsuarioResponseDTO toDTO(Usuario usuario) {
+        UsuarioResponseDTO dto = new UsuarioResponseDTO();
+        dto.setId(usuario.getId());
+        dto.setNome(usuario.getNome());
+        dto.setEmail(usuario.getEmail());
+        dto.setTipoUsuario(usuario.getTipoUsuario());
+        dto.setIdEmpresa(usuario.getEmpresa().getId());
+        dto.setNomeEmpresa(usuario.getEmpresa().getNome());
+        return dto;
+    }
+
+    public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
         Empresa empresa = empresaRepository.findById(dto.getIdEmpresa())
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
 
@@ -35,28 +48,35 @@ public class UsuarioService {
         usuario.setTipoUsuario(dto.getTipoUsuario());
         usuario.setEmpresa(empresa);
 
-        return usuarioRepository.save(usuario);
+        return toDTO(usuarioRepository.save(usuario));
     }
 
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> listar() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Usuario> buscarPorId(Integer id) {
-        return usuarioRepository.findById(id);
+    public Optional<UsuarioResponseDTO> buscarPorId(Integer id) {
+        return usuarioRepository.findById(id).map(this::toDTO);
     }
 
-    public Optional<Usuario> buscarPorEmail(String email) {
+    public Optional<UsuarioResponseDTO> buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).map(this::toDTO);
+    }
+
+    public Optional<Usuario> buscarEntidadePorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
 
-    public Usuario editar(Integer id, Usuario usuarioAtualizado) {
+    public UsuarioResponseDTO editar(Integer id, UsuarioRequestDTO dto) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        usuario.setNome(usuarioAtualizado.getNome());
-        usuario.setEmail(usuarioAtualizado.getEmail());
-        usuario.setTipoUsuario(usuarioAtualizado.getTipoUsuario());
-        return usuarioRepository.save(usuario);
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setTipoUsuario(dto.getTipoUsuario());
+        return toDTO(usuarioRepository.save(usuario));
     }
 
     public void deletar(Integer id) {

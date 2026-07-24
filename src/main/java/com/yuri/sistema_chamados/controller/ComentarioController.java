@@ -1,5 +1,6 @@
 package com.yuri.sistema_chamados.controller;
 
+import com.yuri.sistema_chamados.dto.ComentarioResponseDTO;
 import com.yuri.sistema_chamados.model.Comentario;
 import com.yuri.sistema_chamados.service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,12 @@ public class ComentarioController {
     private ComentarioService comentarioService;
 
     @GetMapping("/chamado/{idChamado}")
-    public List<Comentario> listarPorChamado(@PathVariable Integer idChamado) {
+    public List<ComentarioResponseDTO> listarPorChamado(@PathVariable Integer idChamado) {
         return comentarioService.listarPorChamado(idChamado);
     }
 
     @PostMapping
-    public Comentario adicionar(@RequestBody Comentario comentario) {
+    public ComentarioResponseDTO adicionar(@RequestBody Comentario comentario) {
         return comentarioService.adicionar(comentario);
     }
-
 }

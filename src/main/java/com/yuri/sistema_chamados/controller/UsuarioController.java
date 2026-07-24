@@ -1,7 +1,7 @@
 package com.yuri.sistema_chamados.controller;
 
 import com.yuri.sistema_chamados.dto.UsuarioRequestDTO;
-import com.yuri.sistema_chamados.model.Usuario;
+import com.yuri.sistema_chamados.dto.UsuarioResponseDTO;
 import com.yuri.sistema_chamados.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +17,33 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> listar() {
+    public List<UsuarioResponseDTO> listar() {
         return usuarioService.listar();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Integer id) {
         return usuarioService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Usuario> buscarPorEmail(@PathVariable String email) {
+    public ResponseEntity<UsuarioResponseDTO> buscarPorEmail(@PathVariable String email) {
         return usuarioService.buscarPorEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Usuario cadastrar(@RequestBody UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO cadastrar(@RequestBody UsuarioRequestDTO dto) {
         return usuarioService.cadastrar(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> editar(@PathVariable Integer id, @RequestBody Usuario usuario) {
+    public ResponseEntity<UsuarioResponseDTO> editar(@PathVariable Integer id, @RequestBody UsuarioRequestDTO dto) {
         try {
-            return ResponseEntity.ok(usuarioService.editar(id, usuario));
+            return ResponseEntity.ok(usuarioService.editar(id, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

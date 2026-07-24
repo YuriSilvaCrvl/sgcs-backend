@@ -1,5 +1,6 @@
 package com.yuri.sistema_chamados.controller;
 
+import com.yuri.sistema_chamados.dto.AnexoResponseDTO;
 import com.yuri.sistema_chamados.model.Anexo;
 import com.yuri.sistema_chamados.service.AnexoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,12 @@ public class AnexoController {
     private AnexoService anexoService;
 
     @GetMapping("/chamado/{idChamado}")
-    public List<Anexo> listarPorChamado(@PathVariable Integer idChamado) {
+    public List<AnexoResponseDTO> listarPorChamado(@PathVariable Integer idChamado) {
         return anexoService.listarPorChamado(idChamado);
     }
 
     @PostMapping
-    public Anexo adicionar(@RequestBody Anexo anexo) {
+    public AnexoResponseDTO adicionar(@RequestBody Anexo anexo) {
         return anexoService.adicionar(anexo);
     }
 }

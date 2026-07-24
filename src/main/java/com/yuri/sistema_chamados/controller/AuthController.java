@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
-        Optional<Usuario> usuario = usuarioService.buscarPorEmail(authRequest.getEmail());
+        Optional<Usuario> usuario = usuarioService.buscarEntidadePorEmail(authRequest.getEmail());
 
         if (usuario.isEmpty()) {
             return ResponseEntity.status(401).body("Email não encontrado");
